@@ -1,0 +1,2 @@
+![Reflection 1](image.png)
+Terdapat 2 file yang bertugas sebagai server dan client. Ketika client mengirimkan pesan lewat terminal maka server akan membalas apa yang dikirimkan oleh client dan log dari mana datangnya pesan tersebut.
