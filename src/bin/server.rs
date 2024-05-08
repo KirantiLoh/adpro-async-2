@@ -21,21 +21,21 @@ async fn handle_connection(
     // messages on `bcast_rx` and sending them to the client.
     loop {
         tokio::select! {
-            incoming = ws_stream.next() => {
-                match incoming {
-                    Some(Ok(msg)) => {
-                        if let Some(text) = msg.as_text() {
-                            println!("From client {addr:?} {text:?}");
-                            bcast_tx.send(text.into())?;
-                        }
-                    }
-                    Some(Err(err)) => return Err(err.into()),
-                    None => return Ok(()),
+          incoming = ws_stream.next() => {
+            match incoming {
+              Some(Ok(msg)) => {
+                if let Some(text) = msg.as_text() {
+                  println!("From client {}: {}", addr, text);
+                  bcast_tx.send(format!("{}: {}", addr, text))?;
                 }
+              }
+              Some(Err(err)) => return Err(err.into()),
+              None => return Ok(()),
             }
-            msg = bcast_rx.recv() => {
-                ws_stream.send(Message::text(msg?)).await?;
-            }
+          }
+          msg = bcast_rx.recv() => {
+            ws_stream.send(Message::text(msg?)).await?;
+          }
         }
     }
 }
